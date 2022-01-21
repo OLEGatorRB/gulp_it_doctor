@@ -6,6 +6,7 @@ const babel = require('gulp-babel')
 const uglify = require('gulp-uglify')
 const concat = require('gulp-concat')
 const sourcemaps = require('gulp-sourcemaps')
+const autoprefixer = require('gulp-autoprefixer')
 const del = require('del')
 
 
@@ -31,7 +32,12 @@ function styles() {
 	return gulp.src(paths.styles.src)
 		.pipe(sourcemaps.init())
 		.pipe(less())
-		.pipe(cleanCSS())
+		.pipe(autoprefixer({
+			cascade: false
+		}))
+		.pipe(cleanCSS({
+			level: 2
+		}))
 		.pipe(rename({
 			basename: 'main',
 			suffix: '.min'
