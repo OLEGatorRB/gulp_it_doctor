@@ -8,11 +8,16 @@ const concat = require('gulp-concat')
 const sourcemaps = require('gulp-sourcemaps')
 const autoprefixer = require('gulp-autoprefixer')
 const imagemin = require('gulp-imagemin')
+const htmlmin = require('gulp-htmlmin')
 const del = require('del')
 
 
 //пути к изначальным данным и данным назначения
 const paths = {
+	html: {
+		src: 'src/*.html',
+		dest: 'dist'
+	},
 	styles: {
 		src: 'src/styles/**/*.less',
 		dest: 'dist/css/'
@@ -30,6 +35,19 @@ const paths = {
 //задача для очистки каталога
 function clean() {
 	return del(['dist'])
+}
+
+//минифицируем HTML
+gulp.task('minify', () => {
+	return gulp.src('src/*.html')
+		.pipe(htmlmin({ collapseWhitespace: true }))
+		.pipe(gulp.dest('dist'));
+});
+
+function html() {
+	return gulp.src(paths.html.src)
+		.pipe(htmlmin({ collapseWhitespace: true }))
+		.pipe(gulp.dest('dist'));
 }
 
 //задача для обработки стилей
@@ -79,10 +97,11 @@ function watch() {
 	gulp.watch(paths.scripts.src, scripts)
 }
 
-const build = gulp.series(clean, gulp.parallel(styles, scripts, img), watch)
+const build = gulp.series(clean, html, gulp.parallel(styles, scripts, img), watch)
 
 exports.clean = clean
 exports.img = img
+exports.html = html
 exports.styles = styles
 exports.scripts = scripts
 exports.watch = watch
