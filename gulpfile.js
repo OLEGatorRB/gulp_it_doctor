@@ -7,6 +7,7 @@ const uglify = require('gulp-uglify')
 const concat = require('gulp-concat')
 const sourcemaps = require('gulp-sourcemaps')
 const autoprefixer = require('gulp-autoprefixer')
+const imagemin = require('gulp-imagemin')
 const del = require('del')
 
 
@@ -19,6 +20,10 @@ const paths = {
 	scripts: {
 		src: 'src/scripts/**/*.js',
 		dest: 'dist/js/'
+	},
+	images: {
+		src: 'src/img/*',
+		dest: 'dist/img'
 	}
 }
 
@@ -60,14 +65,24 @@ function scripts() {
 
 }
 
+//задача для сжатия фотографий
+function img() {
+	return gulp.src(paths.images.src)
+		.pipe(imagemin({
+			progressive: true
+		}))
+		.pipe(gulp.dest(paths.images.dest))
+}
+
 function watch() {
 	gulp.watch(paths.styles.src, styles)
 	gulp.watch(paths.scripts.src, scripts)
 }
 
-const build = gulp.series(clean, gulp.parallel(styles, scripts), watch)
+const build = gulp.series(clean, gulp.parallel(styles, scripts, img), watch)
 
 exports.clean = clean
+exports.img = img
 exports.styles = styles
 exports.scripts = scripts
 exports.watch = watch
