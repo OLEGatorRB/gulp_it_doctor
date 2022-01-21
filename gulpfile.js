@@ -5,7 +5,9 @@ const cleanCSS = require('gulp-clean-css')
 const babel = require('gulp-babel')
 const uglify = require('gulp-uglify')
 const concat = require('gulp-concat')
+const sourcemaps = require('gulp-sourcemaps')
 const del = require('del')
+
 
 //пути к изначальным данным и данным назначения
 const paths = {
@@ -27,23 +29,25 @@ function clean() {
 //задача для обработки стилей
 function styles() {
 	return gulp.src(paths.styles.src)
+		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(cleanCSS())
 		.pipe(rename({
 			basename: 'main',
 			suffix: '.min'
 		}))
+		.pipe(sourcemaps.write())
 		.pipe(gulp.dest(paths.styles.dest))
 }
 
 //задача для обработки скриптов
 function scripts() {
-	return gulp.src(paths.scripts.src, {
-		sourcemaps: true
-	})
+	return gulp.src(paths.scripts.src)
+		.pipe(sourcemaps.init())
 		.pipe(babel())
 		.pipe(uglify())
 		.pipe(concat('main.min.js'))
+		.pipe(sourcemaps.write())
 		.pipe(gulp.dest(paths.scripts.dest))
 
 }
