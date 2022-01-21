@@ -42,7 +42,7 @@ function styles() {
 			basename: 'main',
 			suffix: '.min'
 		}))
-		.pipe(sourcemaps.write())
+		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest(paths.styles.dest))
 }
 
@@ -50,10 +50,12 @@ function styles() {
 function scripts() {
 	return gulp.src(paths.scripts.src)
 		.pipe(sourcemaps.init())
-		.pipe(babel())
+		.pipe(babel({
+			presets: ['@babel/env']
+		}))
 		.pipe(uglify())
 		.pipe(concat('main.min.js'))
-		.pipe(sourcemaps.write())
+		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest(paths.scripts.dest))
 
 }
