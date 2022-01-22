@@ -7,3 +7,4 @@ let b = new people;
 b.sayHi()
 let a = "Hello"
 console.log(a)
+alert(a)
